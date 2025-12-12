@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SEO Insight Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      /* Custom scrollbar for a cleaner look */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #1e1e24; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #4b5563; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #6b7280; 
+      }
+
+      @media print {
+        @page {
+          margin: 1cm;
+        }
+        body {
+          background-color: white !important;
+          color: black !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        #root {
+            background-color: white !important;
+        }
+        /* Hide UI elements that shouldn't appear in the PDF */
+        header, footer, form, button, .no-print {
+          display: none !important;
+        }
+        /* Override dark mode prose for print */
+        .prose {
+          color: black !important; 
+        }
+        .prose h1, .prose h2, .prose h3, .prose h4, .prose strong, .prose p, .prose li {
+          color: black !important;
+        }
+        .prose h2 {
+           color: #4338ca !important; /* Indigo-700 for headings */
+           margin-top: 1.5rem !important;
+        }
+        .prose blockquote {
+            border-left-color: #4338ca !important;
+            color: #444 !important;
+            background-color: transparent !important;
+        }
+        /* Remove backgrounds/borders from cards for cleaner print */
+        .bg-gray-800\/50, .bg-gray-800\/30, .bg-gray-900 {
+            background-color: transparent !important;
+            border: 1px solid #ddd !important;
+            box-shadow: none !important;
+        }
+        .text-gray-400 {
+            color: #555 !important;
+        }
+        .text-white {
+            color: #000 !important;
+        }
+        /* Ensure layout is full width */
+        .max-w-7xl, .max-w-4xl {
+          max-width: 100% !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+        /* Ensure links are readable */
+        a {
+            text-decoration: underline;
+            color: #2563eb !important;
+        }
+        /* Prevent breaks inside cards */
+        .break-inside-avoid {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react-markdown": "https://esm.sh/react-markdown@^10.1.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.560.0",
+    "recharts": "https://esm.sh/recharts@2.15.0?deps=react@19.2.3,react-dom@19.2.3",
+    "remark-gfm": "https://esm.sh/remark-gfm@^4.0.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-gray-900 text-white antialiased selection:bg-indigo-500 selection:text-white">
+    <div id="root"></div>
+  </body>
+</html>
