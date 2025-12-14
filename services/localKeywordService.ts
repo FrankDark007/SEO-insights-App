@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { LocalKeywordIntel } from "../types";
+import { extractJSON } from "./utils";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -143,8 +144,7 @@ Return valid JSON matching this structure exactly (no markdown formatting like \
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
 
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    return JSON.parse(cleanText) as LocalKeywordIntel;
+    return extractJSON(text) as LocalKeywordIntel;
 
   } catch (error) {
     console.error("Local Keyword Intel Error:", error);

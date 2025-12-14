@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { RankingResult, StoredRankData, SerpResult } from "../types";
+import { extractJSON } from "./utils";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 const STORAGE_KEY = "seo_insight_rank_data";
@@ -61,8 +62,7 @@ Instructions:
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
     
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    const result = JSON.parse(cleanText);
+    const result = extractJSON(text);
 
     // Normalize output
     const serp: SerpResult[] = (result.topResults || []).map((r: any) => ({

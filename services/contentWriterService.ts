@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { GeneratedContent, ContentRequest, SavedContent } from "../types";
+import { extractJSON } from "./utils";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 const LIBRARY_STORAGE_KEY = "seo_insight_content_library";
@@ -125,8 +126,7 @@ Return a valid JSON object matching this structure exactly (no markdown formatti
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
 
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    const result = JSON.parse(cleanText) as GeneratedContent;
+    const result = extractJSON(text) as GeneratedContent;
     
     // Add ID and timestamp
     result.id = Math.random().toString(36).substr(2, 9);

@@ -28,64 +28,121 @@
       }
 
       @media print {
-        @page {
-          margin: 1cm;
+        /* White background, dark text */
+        body, html {
+          background: white !important;
+          color: #1a1a1a !important;
+          font-size: 11pt !important;
+          line-height: 1.5 !important;
         }
-        body {
-          background-color: white !important;
-          color: black !important;
-          -webkit-print-color-adjust: exact !important;
-          print-color-adjust: exact !important;
-        }
-        #root {
-            background-color: white !important;
-        }
-        /* Hide UI elements that shouldn't appear in the PDF */
-        header, footer, form, button, .no-print {
+        
+        /* Hide navigation and UI elements */
+        nav, header, button, .no-print, [class*="bg-gray-9"], [class*="bg-gray-8"] {
           display: none !important;
         }
-        /* Override dark mode prose for print */
+        
+        /* Main content area */
         .prose {
-          color: black !important; 
-        }
-        .prose h1, .prose h2, .prose h3, .prose h4, .prose strong, .prose p, .prose li {
-          color: black !important;
-        }
-        .prose h2 {
-           color: #4338ca !important; /* Indigo-700 for headings */
-           margin-top: 1.5rem !important;
-        }
-        .prose blockquote {
-            border-left-color: #4338ca !important;
-            color: #444 !important;
-            background-color: transparent !important;
-        }
-        /* Remove backgrounds/borders from cards for cleaner print */
-        .bg-gray-800\/50, .bg-gray-800\/30, .bg-gray-900 {
-            background-color: transparent !important;
-            border: 1px solid #ddd !important;
-            box-shadow: none !important;
-        }
-        .text-gray-400 {
-            color: #555 !important;
-        }
-        .text-white {
-            color: #000 !important;
-        }
-        /* Ensure layout is full width */
-        .max-w-7xl, .max-w-4xl {
+          background: white !important;
+          color: #1a1a1a !important;
           max-width: 100% !important;
           padding: 0 !important;
           margin: 0 !important;
+          border: none !important;
+          box-shadow: none !important;
         }
-        /* Ensure links are readable */
-        a {
-            text-decoration: underline;
-            color: #2563eb !important;
+        
+        /* Headings */
+        .prose h1, .prose h2, .prose h3, .prose h4 {
+          color: #1a1a1a !important;
+          font-weight: 700 !important;
+          page-break-after: avoid !important;
+          margin-top: 1.5em !important;
         }
-        /* Prevent breaks inside cards */
-        .break-inside-avoid {
-          break-inside: avoid;
+        
+        .prose h1 { font-size: 20pt !important; border-bottom: 2px solid #2563eb !important; padding-bottom: 8px !important; }
+        .prose h2 { font-size: 16pt !important; color: #2563eb !important; }
+        .prose h3 { font-size: 13pt !important; }
+        
+        /* Paragraphs and lists */
+        .prose p, .prose li, .prose td, .prose th {
+          color: #1a1a1a !important;
+          font-size: 11pt !important;
+        }
+        
+        .prose ul, .prose ol {
+          page-break-inside: avoid !important;
+        }
+        
+        .prose li {
+          page-break-inside: avoid !important;
+          margin-bottom: 4px !important;
+        }
+        
+        /* Tables */
+        .prose table {
+          width: 100% !important;
+          border-collapse: collapse !important;
+          page-break-inside: avoid !important;
+          margin: 1em 0 !important;
+          font-size: 10pt !important;
+        }
+        
+        .prose th {
+          background: #2563eb !important;
+          color: white !important;
+          font-weight: 600 !important;
+          padding: 8px 12px !important;
+          text-align: left !important;
+          border: 1px solid #1e40af !important;
+        }
+        
+        .prose td {
+          background: white !important;
+          color: #1a1a1a !important;
+          padding: 8px 12px !important;
+          border: 1px solid #d1d5db !important;
+        }
+        
+        .prose tr:nth-child(even) td {
+          background: #f3f4f6 !important;
+        }
+        
+        /* Links */
+        .prose a {
+          color: #2563eb !important;
+          text-decoration: none !important;
+        }
+        
+        /* Strong/Bold */
+        .prose strong, .prose b {
+          color: #1a1a1a !important;
+          font-weight: 700 !important;
+        }
+        
+        /* Blockquotes and notes */
+        .prose blockquote {
+          border-left: 4px solid #2563eb !important;
+          background: #f8fafc !important;
+          color: #1a1a1a !important;
+          padding: 12px 16px !important;
+          margin: 1em 0 !important;
+          page-break-inside: avoid !important;
+        }
+        
+        /* Page break control */
+        .prose h2 {
+          page-break-before: auto !important;
+        }
+        
+        .prose section, .prose div {
+          page-break-inside: avoid !important;
+        }
+        
+        /* Avoid orphans and widows */
+        .prose p {
+          orphans: 3 !important;
+          widows: 3 !important;
         }
       }
     </style>

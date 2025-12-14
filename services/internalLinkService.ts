@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { InternalLinkAnalysis } from "../types";
+import { extractJSON } from "./utils";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -146,8 +147,7 @@ Return valid JSON matching this structure exactly (no markdown formatting like \
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
 
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    return JSON.parse(cleanText) as InternalLinkAnalysis;
+    return extractJSON(text) as InternalLinkAnalysis;
 
   } catch (error) {
     console.error("Internal Link Analysis Error:", error);

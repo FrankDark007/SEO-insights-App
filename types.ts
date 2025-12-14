@@ -1,16 +1,16 @@
-// Common
+// Base types
+export interface AnalysisState {
+  isLoading: boolean;
+  data: string | null;
+  groundingMetadata: any | null;
+  error: string | null;
+}
+
 export interface GroundingChunk {
   web?: {
     uri: string;
     title: string;
   };
-}
-
-export interface AnalysisState {
-  isLoading: boolean;
-  data: string | null;
-  groundingMetadata: { groundingChunks: GroundingChunk[] } | null;
-  error: string | null;
 }
 
 export interface SeoFormData {
@@ -44,7 +44,7 @@ export interface LocationPagePlan {
   schema: any;
   wordCountTarget: number;
   localProofPoints: string[];
-  nearbyAreas?: string[];
+  nearbyAreas: string[];
 }
 
 // Content Brief
@@ -82,17 +82,6 @@ export interface ContentBrief {
 }
 
 // Schema
-export interface ServiceItem {
-  name: string;
-  description: string;
-  url: string;
-}
-
-export interface FaqItem {
-  question: string;
-  answer: string;
-}
-
 export interface BusinessProfile {
   businessName: string;
   type: string;
@@ -106,7 +95,7 @@ export interface BusinessProfile {
   hours247: boolean;
   serviceArea: string;
   priceRange: string;
-  yearEstablished?: string;
+  yearEstablished: string;
   description: string;
   logoUrl: string;
   imageUrl: string;
@@ -118,10 +107,21 @@ export interface BusinessProfile {
   rating?: number;
 }
 
+export interface ServiceItem {
+  name: string;
+  description: string;
+  url: string;
+}
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 export interface SchemaOutput {
   localBusiness: any;
   services: any[];
-  faq?: any;
+  faq: any;
   organization: any;
   combined: string;
   warnings: string[];
@@ -129,14 +129,6 @@ export interface SchemaOutput {
 }
 
 // Rank Tracker
-export interface SerpResult {
-  position: number;
-  url: string;
-  domain: string;
-  title: string;
-  isYou: boolean;
-}
-
 export interface RankingResult {
   keyword: string;
   currentRank: number | null;
@@ -151,33 +143,35 @@ export interface RankingResult {
   checkedAt: string;
 }
 
+export interface SerpResult {
+  position: number;
+  url: string;
+  domain: string;
+  title: string;
+  isYou: boolean;
+}
+
 export interface StoredRankData {
   domain: string;
   location: string;
   keywords: string[];
   history: {
-    [keyword: string]: { date: string; position: number | null }[];
+    [keyword: string]: {
+      date: string;
+      position: number | null;
+    }[];
   };
   lastChecked: string;
 }
 
 // GBP Audit
-export interface ProfileMetric {
-  metric: string;
-  you: number;
-  competitorAvg: number;
-  leader: number;
-  max: number;
-  unit: string;
-}
-
 export interface GBPAuditResult {
   mapPackSnapshot: {
     rank: number;
     businessName: string;
     rating: number;
     reviewCount: number;
-    responseRate: number | null;
+    responseRate: number;
     primaryCategory: string;
     isYou: boolean;
   }[];
@@ -211,17 +205,16 @@ export interface GBPAuditResult {
   quickWins: string[];
 }
 
+export interface ProfileMetric {
+  metric: string;
+  you: number;
+  competitorAvg: number;
+  leader: number;
+  max: number;
+  unit: string;
+}
+
 // Review Analyzer
-export interface Theme {
-  theme: string;
-  frequency: number;
-  exampleQuote: string;
-}
-
-export interface ThemeWithOpportunity extends Theme {
-  yourOpportunity: string;
-}
-
 export interface ReviewAnalysis {
   overview: {
     totalReviews: number;
@@ -256,17 +249,17 @@ export interface ReviewAnalysis {
   };
 }
 
-// Backlink Gap
-export interface LinkOpportunity {
-  linkingDomain: string;
-  domainAuthority: number;
-  linksTo: string[];
-  linkType: string;
-  acquisitionDifficulty: string;
-  linkUrl?: string;
-  anchorTextUsed?: string;
+export interface Theme {
+  theme: string;
+  frequency: number;
+  exampleQuote: string;
 }
 
+export interface ThemeWithOpportunity extends Theme {
+  yourOpportunity: string;
+}
+
+// Backlink Gap
 export interface BacklinkGapResult {
   overview: {
     domain: string;
@@ -296,7 +289,38 @@ export interface BacklinkGapResult {
   }[];
 }
 
+export interface LinkOpportunity {
+  linkingDomain: string;
+  domainAuthority: number;
+  linksTo: string[];
+  linkType: string;
+  acquisitionDifficulty: string;
+  linkUrl: string;
+  anchorTextUsed: string;
+}
+
 // Content Gap Matrix
+export interface ContentGapResult {
+  matrix: MatrixCell[][];
+  summary: {
+    totalPossible: number;
+    yourCoverage: number;
+    yourPercent: number;
+    competitorAvgCoverage: number;
+    gaps: number;
+    opportunities: number;
+  };
+  priorityGaps: GapOpportunity[];
+  opportunities: GapOpportunity[];
+  yourStrengths: {
+    city: string;
+    service: string;
+    competitorsMissing: string[];
+    action: string;
+  }[];
+  competitorCoverage: any[];
+}
+
 export interface MatrixCell {
   city: string;
   service: string;
@@ -316,63 +340,12 @@ export interface GapOpportunity {
   recommendedAction: string;
 }
 
-export interface ContentGapResult {
-  matrix: MatrixCell[][];
-  summary: {
-    totalPossible: number;
-    yourCoverage: number;
-    yourPercent: number;
-    competitorAvgCoverage: number;
-    gaps: number;
-    opportunities: number;
-  };
-  priorityGaps: GapOpportunity[];
-  opportunities: GapOpportunity[];
-  yourStrengths: {
-    city: string;
-    service: string;
-    competitorsMissing: string[];
-    action: string;
-  }[];
-  competitorCoverage: {
-    domain: string;
-    coverage: { city: string; service: string; url: string }[];
-  }[];
-}
-
 // Competitor Alerts
-export interface Alert {
-  id: string;
-  type: 'new_page' | 'title_change' | 'meta_change' | 'review_change' | 'rating_change' | 'gbp_post' | 'new_backlink' | 'baseline' | 'schema_change';
-  severity: 'high' | 'medium' | 'low';
-  competitor: string;
-  details: {
-    url?: string;
-    newValue?: string | number;
-    oldValue?: string | number;
-    change?: number;
-  };
-  detectedAt: string;
-  recommendedResponse?: string;
-  addressed: boolean;
-}
-
-export interface CompetitorSnapshot {
+export interface AlertCheckResult {
   domain: string;
-  takenAt: string;
-  pages: {
-    url: string;
-    title: string;
-    metaDescription: string;
-    h1: string;
-    schemaTypes: string[];
-  }[];
-  gbpData: {
-    reviewCount: number;
-    rating: number;
-    lastPostDate?: string;
-  };
-  estimatedBacklinks: number;
+  checkedAt: string;
+  alerts: Alert[];
+  currentSnapshot: CompetitorSnapshot;
 }
 
 export interface StoredAlertData {
@@ -394,14 +367,76 @@ export interface StoredAlertData {
   lastFullCheck: string;
 }
 
-export interface AlertCheckResult {
+export interface CompetitorSnapshot {
   domain: string;
-  checkedAt: string;
-  alerts: Alert[];
-  currentSnapshot: CompetitorSnapshot;
+  takenAt: string;
+  pages: {
+    url: string;
+    title: string;
+    metaDescription: string;
+    h1: string;
+    schemaTypes: string[];
+  }[];
+  gbpData: {
+    reviewCount: number;
+    rating: number;
+    lastPostDate: string;
+  };
+  estimatedBacklinks: number;
+}
+
+export interface Alert {
+  id: string;
+  type: 'new_page' | 'title_change' | 'meta_change' | 'review_change' | 'rating_change' | 'gbp_post' | 'new_backlink' | 'schema_change' | 'baseline';
+  severity: 'high' | 'medium' | 'low';
+  competitor: string;
+  details: {
+    url?: string;
+    newValue?: string | number;
+    oldValue?: string | number;
+    change?: number;
+  };
+  detectedAt: string;
+  recommendedResponse: string;
+  addressed: boolean;
 }
 
 // Internal Link Optimizer
+export interface InternalLinkAnalysis {
+  overview: {
+    totalPages: number;
+    orphanPages: number;
+    thinLinkPages: number;
+    wellLinkedPages: number;
+    avgLinksPerPage: number;
+    maxDepth: number;
+  };
+  pages: PageLinkData[];
+  orphans: OrphanPage[];
+  opportunities: LinkOpp[];
+  anchorAnalysis: {
+    targetUrl: string;
+    internalLinkCount: number;
+    anchors: { text: string; count: number }[];
+    issues: string[];
+    recommendation: string;
+  }[];
+  depthDistribution: {
+    depth: number;
+    pageCount: number;
+    pages: string[];
+  }[];
+  siloHealth: SiloAnalysis[];
+  actionPlan: {
+    priority: number;
+    type: string;
+    action: string;
+    sourceUrl: string;
+    targetUrl: string;
+    anchor: string;
+  }[];
+}
+
 export interface PageLinkData {
   url: string;
   title: string;
@@ -409,6 +444,15 @@ export interface PageLinkData {
   internalLinksOut: number;
   depth: number;
   pageType: string;
+}
+
+export interface SiloAnalysis {
+  siloName: string;
+  hubPage: string;
+  spokePages: string[];
+  crossLinkCount: number;
+  health: string;
+  recommendations: string[];
 }
 
 export interface OrphanPage {
@@ -429,50 +473,60 @@ export interface LinkOpp {
   targetTitle: string;
   suggestedAnchor: string;
   reason: string;
-  priority: 'high' | 'medium' | 'low';
-}
-
-export interface SiloAnalysis {
-  siloName: string;
-  hubPage: string;
-  spokePages: string[];
-  crossLinkCount: number;
-  health: string;
-  recommendations: string[];
-}
-
-export interface InternalLinkAnalysis {
-  overview: {
-    totalPages: number;
-    orphanPages: number;
-    thinLinkPages: number;
-    wellLinkedPages: number;
-    avgLinksPerPage: number;
-    maxDepth: number;
-  };
-  pages: PageLinkData[];
-  orphans: OrphanPage[];
-  opportunities: LinkOpp[];
-  anchorAnalysis: {
-    targetUrl: string;
-    internalLinkCount: number;
-    anchors: { text: string; count: number }[];
-    issues: string[];
-    recommendation: string;
-  }[];
-  depthDistribution: { depth: number; pageCount: number; pages: string[] }[];
-  siloHealth: SiloAnalysis[];
-  actionPlan: {
-    priority: number;
-    type: string;
-    action: string;
-    sourceUrl: string;
-    targetUrl: string;
-    anchor: string;
-  }[];
+  priority: string;
 }
 
 // Local Keyword Intel
+export interface LocalKeywordIntel {
+  cityOverview: {
+    city: string;
+    state: string;
+    population: number;
+    avgHomeValue: number;
+    primarySearchPattern: string;
+    opportunityScore: number;
+    demographicNotes: string;
+  }[];
+  keywordVariationMatrix: KeywordVariation[];
+  intentByCity: CityIntentBreakdown[];
+  cityKeywords: {
+    city: string;
+    keywords: {
+      keyword: string;
+      volumeEstimate: string;
+      competition: string;
+      opportunity: string;
+    }[];
+    uniqueModifiers: string[];
+    contentAngle: string;
+  }[];
+  propertyTypeDistribution: PropertyTypes[];
+  seasonalTrends: SeasonalData[];
+  emergingKeywords: {
+    keyword: string;
+    cities: string[];
+    trend: string;
+    growthPercent: number;
+    recommendedAction: string;
+  }[];
+  competitorGapsByCity: {
+    city: string;
+    keywordGap: string;
+    competitorRankingElsewhere: string;
+    opportunity: string;
+  }[];
+  contentStrategy: CityContentStrategy[];
+}
+
+export interface KeywordVariation {
+  baseKeyword: string;
+  variations: {
+    city: string;
+    variation: string;
+    volume: string;
+  }[];
+}
+
 export interface CityIntentBreakdown {
   city: string;
   emergency: number;
@@ -496,15 +550,6 @@ export interface SeasonalData {
   insight: string;
 }
 
-export interface KeywordVariation {
-  baseKeyword: string;
-  variations: {
-    city: string;
-    variation: string;
-    volume: string;
-  }[];
-}
-
 export interface CityContentStrategy {
   city: string;
   positioningAngle: string;
@@ -517,49 +562,36 @@ export interface CityContentStrategy {
   recommendedH1: string;
 }
 
-export interface LocalKeywordIntel {
-  cityOverview: {
+// Weather Trigger
+export interface WeatherCheckResult {
+  currentConditions: {
     city: string;
     state: string;
-    population: number;
-    avgHomeValue: number;
-    primarySearchPattern: string;
-    opportunityScore: number;
-    demographicNotes: string;
+    temperature: number;
+    feelsLike: number;
+    conditions: string;
+    humidity: number;
+    windSpeed: number;
+    riskLevel: string;
+    activeTriggers: string[];
   }[];
-  keywordVariationMatrix: KeywordVariation[];
-  intentByCity: CityIntentBreakdown[];
-  cityKeywords: {
-    city: string;
-    keywords: { keyword: string; volumeEstimate: string; competition: string; opportunity: string }[];
-    uniqueModifiers: string[];
-    contentAngle: string;
-  }[];
-  propertyTypeDistribution: PropertyTypes[];
-  seasonalTrends: SeasonalData[];
-  emergingKeywords: {
-    keyword: string;
-    cities: string[];
-    trend: string;
-    growthPercent: number;
-    recommendedAction: string;
-  }[];
-  competitorGapsByCity: {
-    city: string;
-    keywordGap: string;
-    competitorRankingElsewhere: string;
-    opportunity: string;
-  }[];
-  contentStrategy: CityContentStrategy[];
+  forecast: CityForecast[];
+  activeAlerts: WeatherAlert[];
+  upcomingRisks: any[];
 }
 
-// Weather Triggers
-export interface TriggerConfig {
-  id: string;
-  type: string;
-  condition: string;
-  riskLevel: 'critical' | 'high' | 'medium' | 'low';
-  enabled: boolean;
+export interface CityForecast {
+  city: string;
+  daily: {
+    date: string;
+    high: number;
+    low: number;
+    conditions: string;
+    precipChance: number;
+    precipAmount: number;
+    riskLevel: string;
+    riskType: string;
+  }[];
 }
 
 export interface WeatherAlert {
@@ -583,75 +615,15 @@ export interface WeatherAlert {
   acknowledged: boolean;
 }
 
-export interface CityForecast {
-  city: string;
-  daily: {
-    date: string;
-    high: number;
-    low: number;
-    conditions: string;
-    precipChance: number;
-    precipAmount: number;
-    riskLevel: 'critical' | 'high' | 'medium' | 'low';
-    riskType: string;
-  }[];
-}
-
-export interface WeatherCheckResult {
-  currentConditions: {
-    city: string;
-    state: string;
-    temperature: number;
-    feelsLike: number;
-    conditions: string;
-    humidity: number;
-    windSpeed: number;
-    riskLevel: 'critical' | 'high' | 'medium' | 'low';
-    activeTriggers: string[];
-  }[];
-  forecast: CityForecast[];
-  activeAlerts: WeatherAlert[];
-  upcomingRisks: {
-    date: string;
-    cities: string[];
-    riskType: string;
-    riskLevel: string;
-    description: string;
-  }[];
+export interface TriggerConfig {
+  id: string;
+  type: string;
+  condition: string;
+  riskLevel: 'critical' | 'high' | 'medium';
+  enabled: boolean;
 }
 
 // Google Ads Spy
-export interface CompetitorAd {
-  advertiser: string;
-  domain: string;
-  position: number;
-  adType: string;
-  headlines: string[];
-  descriptions: string[];
-  displayUrl: string;
-  landingPage: string;
-  extensions: {
-    call: boolean;
-    location: boolean;
-    sitelinks: number;
-    callouts: boolean;
-    structuredSnippets: boolean;
-  };
-  estimatedMonthlySpend: string;
-}
-
-export interface SwipeFileItem {
-  text: string;
-  usedBy: string[];
-  characterCount: number;
-}
-
-export interface GeneratedAdCopy {
-  headlines: { text: string; chars: number; note?: string }[];
-  descriptions: { text: string; chars: number }[];
-  differentiationStrategy: string[];
-}
-
 export interface AdsSpyResult {
   overview: {
     totalAds: number;
@@ -693,7 +665,80 @@ export interface AdsSpyResult {
   }[];
 }
 
-// SERP Features
+export interface CompetitorAd {
+  advertiser: string;
+  domain: string;
+  position: number;
+  adType: string;
+  headlines: string[];
+  descriptions: string[];
+  displayUrl: string;
+  landingPage: string;
+  extensions: {
+    call: boolean;
+    location: boolean;
+    sitelinks: number;
+    callouts: boolean;
+    structuredSnippets: boolean;
+  };
+  estimatedMonthlySpend: string;
+}
+
+export interface SwipeFileItem {
+  text: string;
+  usedBy: string[];
+  characterCount: number;
+}
+
+export interface GeneratedAdCopy {
+  headlines: { text: string; chars: number; note?: string }[];
+  descriptions: { text: string; chars: number }[];
+  differentiationStrategy: string[];
+}
+
+// SERP Feature Tracker
+export interface SerpFeatureAnalysis {
+  overview: SerpOverviewItem[];
+  keywordAnalysis: {
+    keyword: string;
+    featuresPresent: string[];
+    featuredSnippet?: {
+      owner: string;
+      type: string;
+      content: string;
+    };
+    paaQuestions: string[];
+    imagePackPresent: boolean;
+    videoCarouselPresent: boolean;
+    localPack?: {
+      businesses: { position: number; name: string; rating: number; reviews: number }[];
+      youAppear: boolean;
+    };
+  }[];
+  featuredSnippetOpportunities: SnippetOpportunity[];
+  paaQuestions: PAAQuestion[];
+  localPackAnalysis: any[]; // Defined within usage or refine if needed
+  imageOpportunities: {
+    keyword: string;
+    topSources: string[];
+    yourImagesIndexed: boolean;
+    recommendation: string;
+  }[];
+  videoOpportunities: {
+    keyword: string;
+    topChannels: string[];
+    localCompetitorPresent: boolean;
+    recommendation: string;
+  }[];
+  captureStrategy: {
+    featuredSnippets: any[];
+    paa: string[];
+    localPack: string[];
+    images: string[];
+    videos: string[];
+  };
+}
+
 export interface SerpOverviewItem {
   feature: string;
   keywordsWithFeature: number;
@@ -708,7 +753,7 @@ export interface SnippetOpportunity {
   currentOwner: string;
   snippetType: string;
   contentNeeded: string;
-  priority: 'high' | 'medium' | 'low';
+  priority: string;
   targetPage: string;
 }
 
@@ -719,70 +764,16 @@ export interface PAAQuestion {
   targetPage: string;
 }
 
-export interface SerpFeatureAnalysis {
-  overview: SerpOverviewItem[];
-  keywordAnalysis: {
-    keyword: string;
-    featuresPresent: string[];
-    featuredSnippet?: { owner: string; type: string; content: string };
-    paaQuestions: string[];
-    localPack?: {
-      businesses: { position: number; name: string; rating: number; reviews: number }[];
-      youAppear: boolean;
-    };
-    imagePackPresent: boolean;
-    videoCarouselPresent: boolean;
-  }[];
-  featuredSnippetOpportunities: SnippetOpportunity[];
-  paaQuestions: PAAQuestion[];
-  localPackAnalysis: {
-    keyword: string;
-    businesses: { position: number; name: string; rating: number; reviews: number }[];
-    youAppear: boolean;
-  }[];
-  imageOpportunities: {
-    keyword: string;
-    topSources: string[];
-    yourImagesIndexed: boolean;
-    recommendation: string;
-  }[];
-  videoOpportunities: {
-    keyword: string;
-    topChannels: string[];
-    localCompetitorPresent: boolean;
-    recommendation: string;
-  }[];
-  captureStrategy: {
-    featuredSnippets: {
-      keyword: string;
-      type: string;
-      formatNeeded: string;
-      pageToOptimize: string;
-      contentTemplate: string;
-    }[];
-    paa: string[];
-    localPack: string[];
-    images: string[];
-    videos: string[];
-  };
-}
-
 // Content Writer
 export interface ContentRequest {
   keyword: string;
-  contentType: string;
+  contentType: 'service' | 'location' | 'blog' | 'faq';
   location?: string;
   wordCount: number;
   tone: string;
   businessName: string;
   phoneNumber: string;
   briefData?: any;
-}
-
-export interface ContentSection {
-  id: string;
-  name: string;
-  content: string;
 }
 
 export interface GeneratedContent {
@@ -802,7 +793,10 @@ export interface GeneratedContent {
     readingLevel: number;
     localMentions: number;
   };
-  seoChecklist: { item: string; passed: boolean }[];
+  seoChecklist: {
+    item: string;
+    passed: boolean;
+  }[];
   metaData: {
     titleTag: string;
     titleLength: number;
@@ -810,12 +804,13 @@ export interface GeneratedContent {
     metaLength: number;
     urlSlug: string;
   };
-  schema: {
-    localBusiness: any;
-    service: any;
-    faq: any;
-    breadcrumb: any;
-  };
+  schema: any;
+}
+
+export interface ContentSection {
+  id: string;
+  name: string;
+  content: string;
 }
 
 export interface SavedContent {
@@ -841,12 +836,28 @@ export interface BusinessNAP {
   website: string;
 }
 
+export interface CitationAuditResult {
+  healthScore: number;
+  accuracy: number;
+  coverage: number;
+  consistency: number;
+  summary: {
+    verified: number;
+    hasIssues: number;
+    missing: number;
+  };
+  citations: CitationStatus[];
+  issues: CitationIssue[];
+  missingCitations: MissingCitation[];
+  variations: any;
+}
+
 export interface CitationStatus {
   source: string;
   sourceUrl: string;
   category: string;
   domainAuthority: number;
-  status: 'verified' | 'has_issues' | 'missing';
+  status: string; // verified, has_issues, missing
   nameMatch: boolean;
   addressMatch: boolean;
   phoneMatch: boolean;
@@ -855,7 +866,7 @@ export interface CitationStatus {
   foundAddress: string;
   foundPhone: string;
   foundWebsite: string;
-  listingUrl?: string;
+  listingUrl: string;
   lastChecked: string;
 }
 
@@ -871,37 +882,123 @@ export interface CitationIssue {
 export interface MissingCitation {
   source: string;
   domainAuthority: number;
-  priority: 'critical' | 'high' | 'medium' | 'low';
+  priority: string;
   category: string;
   buildUrl: string;
   estimatedTime: string;
 }
 
-export interface CitationAuditResult {
-  healthScore: number;
-  accuracy: number;
-  coverage: number;
-  consistency: number;
-  summary: {
-    verified: number;
-    hasIssues: number;
-    missing: number;
-  };
-  citations: CitationStatus[];
-  issues: CitationIssue[];
-  missingCitations: MissingCitation[];
-  variations: {
-    names: { value: string; count: number; isPreferred: boolean }[];
-    addresses: { value: string; count: number; isPreferred: boolean }[];
-    phones: { value: string; count: number; isPreferred: boolean }[];
-  };
+// Lead Tracker
+export interface Lead {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  dateTime: string;
+  leadType: 'phone' | 'form' | 'chat' | 'email';
+  contactName: string;
+  phoneNumber?: string;
+  serviceNeeded?: string;
+  city?: string;
+  source?: string;
+  landingPage?: string;
+  keyword?: string;
+  leadValue: number;
+  status: 'new' | 'contacted' | 'quoted' | 'won' | 'lost';
+  notes?: string;
 }
 
-// Rich Results & Schema
-export interface SchemaPattern {
-  name: string;
-  type: string;
-  code: any;
+export interface LeadStats {
+  summary: {
+    totalLeads: number;
+    wonLeads: number;
+    pendingLeads: number;
+    lostLeads: number;
+    totalRevenue: number;
+    avgLeadValue: number;
+    winRate: number;
+  };
+  bySource: { source: string; leads: number; won: number; revenue: number; percentage: number }[];
+  byPage: { page: string; leads: number; won: number; revenue: number; conversionRate: number }[];
+  byKeyword: { keyword: string; leads: number; won: number; revenue: number }[];
+  byService: { service: string; leads: number; avgValue: number; totalRevenue: number }[];
+  byCity: { city: string; leads: number; won: number; revenue: number }[];
+  monthlyTrend: { month: string; totalLeads: number; wonLeads: number; revenue: number }[];
+}
+
+export interface LeadSettings {
+  defaultLeadValue: number;
+  services: string[];
+  cities: string[];
+  sources: string[];
+}
+
+// Rich Result Analyzer
+export interface SerpAnalysisResult {
+  overview: FeatureOverview[];
+  competitorResults: CompetitorRichResult[];
+  quickWins: {
+    yourPage: string;
+    keyword: string;
+    yourPosition: number;
+    missingFeature: string;
+    competitorWithFeature: { domain: string; position: number };
+    priorityScore: number;
+  }[];
+  yourPagesEligibility: PageEligibility[];
+  priorityActions: {
+    priority: number;
+    page: string;
+    action: string;
+    position: number;
+    volume: number;
+    ease: string;
+    score: number;
+  }[];
+}
+
+export interface FeatureOverview {
+  featureType: string;
+  competitorsWithFeature: number;
+  youHaveCount: number;
+  gap: number;
+  quickWinCount: number;
+}
+
+export interface CompetitorRichResult {
+  domain: string;
+  url: string;
+  keyword: string;
+  city: string;
+  position: number;
+  richResults: { type: string; details: string }[];
+  schemaFound: { type: string; code: any; isValid: boolean }[];
+  analysisNotes: string[];
+}
+
+export interface PageEligibility {
+  page: string;
+  currentSchema: string[];
+  eligibility: {
+    featureType: string;
+    eligible: boolean;
+    reason: string;
+    requirements: string[];
+    fix: string;
+  }[];
+  issues: string[];
+}
+
+export interface SchemaGenerationInput {
+  page: string;
+  city?: string;
+  schemaTypes: string[];
+  businessInfo?: any;
+}
+
+export interface GeneratedSchema {
+  page: string;
+  combinedScript: string;
+  validationStatus: string; // valid, warning, error
 }
 
 export interface RichResultHistoryEntry {
@@ -924,84 +1021,13 @@ export interface RichResultAlert {
   details: any;
 }
 
-export interface SchemaGenerationInput {
-  page: string;
-  city: string;
-  schemaTypes: string[];
-  businessInfo: {
-    name: string;
-    phone: string;
-    address: string;
-    rating?: number;
-    reviewCount?: number;
-  };
+export interface SchemaPattern {
+  id: string;
+  name: string;
+  schema: any;
 }
 
-export interface GeneratedSchema {
-  page: string;
-  combinedScript: string;
-  validationStatus: 'valid' | 'warning' | 'error';
-  warnings: string[];
-}
-
-export interface FeatureOverview {
-  featureType: string;
-  competitorsWithFeature: number;
-  youHaveCount: number;
-  gap: number;
-  quickWinCount: number;
-}
-
-export interface CompetitorRichResult {
-  domain: string;
-  url: string;
-  keyword: string;
-  city: string;
-  position: number;
-  richResults: { type: string; details: string }[];
-  schemaFound: { type: string; code: any; isValid: boolean }[];
-  analysisNotes: string[];
-}
-
-export interface QuickWin {
-  yourPage: string;
-  keyword: string;
-  yourPosition: number;
-  missingFeature: string;
-  competitorWithFeature: { domain: string; position: number };
-  priorityScore: number;
-}
-
-export interface PageEligibility {
-  page: string;
-  currentSchema: string[];
-  eligibility: {
-    featureType: string;
-    eligible: boolean;
-    reason: string;
-    requirements: string[];
-    fix: string;
-  }[];
-  issues: string[];
-}
-
-export interface SerpAnalysisResult {
-  overview: FeatureOverview[];
-  competitorResults: CompetitorRichResult[];
-  quickWins: QuickWin[];
-  yourPagesEligibility: PageEligibility[];
-  priorityActions: {
-    priority: number;
-    page: string;
-    action: string;
-    position: number;
-    volume: number;
-    ease: string;
-    score: number;
-  }[];
-}
-
-// Google Integrations
+// Google Integration
 export interface GoogleAuthState {
   analytics: boolean;
   searchConsole: boolean;
@@ -1014,16 +1040,12 @@ export interface GAAuditResult {
     propertyId: string;
     displayName: string;
     createTime: string;
-    dataStreams: { streamId: string; streamName: string; type: string; webStreamData?: { measurementId: string; defaultUri: string }; status: string }[];
+    dataStreams: any[];
     healthScore: number;
-    status: 'active' | 'duplicate' | 'orphaned';
+    status: 'active' | 'duplicate' | 'archived';
     issues: string[];
   }[];
-  duplicates: {
-    name: string;
-    properties: any[];
-    reason: string;
-  }[];
+  duplicates: any[];
   trackingIssues: {
     domain: string;
     hasTag: boolean;
@@ -1035,7 +1057,7 @@ export interface GAAuditResult {
     name: string;
     event: string;
     lastTriggered: string;
-    status: 'working' | 'misconfigured';
+    status: string;
     issueDetails?: string;
   }[];
   overallHealthScore: number;
@@ -1050,7 +1072,7 @@ export interface TrafficData {
     bounceRate: number;
   };
   trend: { date: string; sessions: number }[];
-  topPages: { path: string; sessions: number; conversions: number; convRate: number }[];
+  topPages: any[];
 }
 
 export interface GSCAuditResult {
@@ -1059,8 +1081,8 @@ export interface GSCAuditResult {
     permissionLevel: string;
     verified: boolean;
     type: string;
-    sitemaps: { path: string; lastSubmitted: string; status: string; urlsSubmitted: number; urlsIndexed: number }[];
-    coverageIssues: { type: string; count: number; examples: string[] }[];
+    sitemaps: any[];
+    coverageIssues: any[];
   }[];
   linkingStatus: {
     gaProperty: string;
@@ -1078,7 +1100,7 @@ export interface SearchData {
     ctr: number;
     avgPosition: number;
   };
-  topQueries: { query: string; impressions: number; clicks: number; position: number }[];
+  topQueries: any[];
   positionDist: { range: string; count: number }[];
 }
 
@@ -1087,8 +1109,8 @@ export interface ChecklistItem {
   title: string;
   description: string;
   priority: 'critical' | 'high' | 'medium' | 'low';
-  status: 'not_started' | 'in_progress' | 'verified' | 'completed' | 'blocked';
-  verificationType: 'tracking' | 'conversion' | 'gsc_verification' | 'manual';
+  status: 'not_started' | 'in_progress' | 'completed' | 'verified' | 'blocked';
+  verificationType: string;
   verificationParams?: any;
   instructions: string;
   verifiedAt?: string;
@@ -1101,83 +1123,7 @@ export interface VerificationResult {
   recommendedFix?: string;
 }
 
-// Leads
-export interface LeadSettings {
-    defaultLeadValue: number;
-    services: string[];
-    cities: string[];
-    sources: string[];
-}
-
-export interface Lead {
-    id: string;
-    dateTime: string;
-    leadType: 'phone' | 'form' | 'chat' | 'email';
-    contactName: string;
-    phoneNumber: string;
-    serviceNeeded: string;
-    city: string;
-    source: string;
-    landingPage?: string;
-    keyword?: string;
-    leadValue: number;
-    status: 'new' | 'contacted' | 'quoted' | 'won' | 'lost';
-    notes?: string;
-    createdAt: string;
-    updatedAt: string;
-}
-
-export interface LeadStats {
-    summary: {
-        totalLeads: number;
-        wonLeads: number;
-        pendingLeads: number;
-        lostLeads: number;
-        totalRevenue: number;
-        avgLeadValue: number;
-        winRate: number;
-    };
-    bySource: {
-        source: string;
-        leads: number;
-        won: number;
-        revenue: number;
-        percentage: number;
-    }[];
-    byPage: {
-        page: string;
-        leads: number;
-        won: number;
-        revenue: number;
-        conversionRate: number;
-    }[];
-    byKeyword: {
-        keyword: string;
-        leads: number;
-        won: number;
-        revenue: number;
-    }[];
-    byService: {
-        service: string;
-        leads: number;
-        avgValue: number;
-        totalRevenue: number;
-    }[];
-    byCity: {
-        city: string;
-        leads: number;
-        won: number;
-        revenue: number;
-    }[];
-    monthlyTrend: {
-        month: string;
-        totalLeads: number;
-        wonLeads: number;
-        revenue: number;
-    }[];
-}
-
-// Ahrefs
+// Ahrefs Integration
 export interface AhrefsConfig {
   apiToken: string;
   primaryDomain: string;
@@ -1253,8 +1199,742 @@ export interface AhrefsKeywordGap {
   yourPosition: number | null;
 }
 
-export interface AhrefsReferringDomain {
+// Keyword Opportunity Radar
+export interface CitySubdomain {
+  city: string;
+  state: string;
+  subdomain: string;
+}
+
+export interface CityPerformance {
+  city: string;
+  subdomain: string;
+  totalKeywords: number;
+  ranking: number;
+  notRanking: number;
+  avgPosition: number;
+  totalVolume: number;
+  capturedVolume: number;
+  missedVolume: number;
+  topOpportunity: string;
+  score: number;
+}
+
+export interface TrackedKeyword {
+  keyword: string;
+  city: string;
+  monthlyVolume: number;
+  volumeTrend: "rising" | "stable" | "declining";
+  trendPercent: number;
+  difficulty: "low" | "medium" | "high";
+  yourRank: number | null;
+  topCompetitor: string;
+  competitorRank: number;
+  hasPage: boolean;
+  recommendedUrl: string;
+  priority: "critical" | "high" | "medium" | "low";
+  seasonality: string;
+  lastUpdated: string;
+}
+
+export interface PageRecommendation {
+  keyword: string;
+  city: string;
+  suggestedTitle: string;
+  suggestedUrl: string;
+  estimatedVolume: number;
+  difficulty: "low" | "medium" | "high";
+  reason: string;
+  competitorUrls: string[];
+  priority: "critical" | "high" | "medium" | "low";
+  projectedTraffic: number;
+}
+
+export interface KeywordCluster {
+  name: string;
+  keywords: string[];
+  totalVolume: number;
+  avgDifficulty: string;
+  coverage: number;
+}
+
+export interface KeywordRadarResult {
+  scanDate: string;
+  cities: CityPerformance[];
+  allKeywords: TrackedKeyword[];
+  pageRecommendations: PageRecommendation[];
+  clusters: KeywordCluster[];
+  summary: {
+    totalCities: number;
+    totalKeywordsTracked: number;
+    totalMonthlyVolume: number;
+    capturedVolume: number;
+    missedOpportunityVolume: number;
+    pagesNeeded: number;
+    topRisingKeywords: string[];
+    seasonalAlerts: string[];
+  };
+  quickWins: {
+    keyword: string;
+    city: string;
+    currentRank: number;
+    volume: number;
+    action: string;
+  }[];
+}
+
+// Broken Link Finder
+export interface BrokenLink {
+  url: string;
+  sourceUrl: string;
+  anchorText: string;
+  statusCode: number;
+  type: "internal" | "external";
+  severity: "critical" | "high" | "medium" | "low";
+  lastWorking: string;
+  suggestedFix: string;
+}
+
+export interface RedirectChain {
+  originalUrl: string;
+  hops: string[];
+  finalUrl: string;
+  totalHops: number;
+  issue: string;
+  fix: string;
+}
+
+export interface LinkBuildingOpportunity {
+  competitorUrl: string;
+  brokenUrl: string;
+  originalTopic: string;
+  linkingPages: number;
+  domainAuthority: number;
+  yourReplacementUrl: string | null;
+  suggestedContent: string;
+  outreachTemplate: string;
+  priority: "high" | "medium" | "low";
+}
+
+export interface BrokenLinkCitationIssue {
+  platform: string;
+  profileUrl: string;
+  issue: string;
+  currentValue: string;
+  expectedValue: string;
+  impact: "high" | "medium" | "low";
+  howToFix: string;
+}
+
+export interface BrokenLinkAuditResult {
+  scanDate: string;
+  domain: string;
+  summary: {
+    totalLinksChecked: number;
+    brokenInternalLinks: number;
+    brokenExternalLinks: number;
+    redirectChains: number;
+    orphanPages: number;
+    linkBuildingOpportunities: number;
+    citationIssues: number;
+    healthScore: number;
+  };
+  brokenLinks: BrokenLink[];
+  redirectChains: RedirectChain[];
+  orphanPages: {
+    url: string;
+    title: string;
+    hasContent: boolean;
+    lastCrawled: string;
+    recommendation: string;
+  }[];
+  linkBuildingOpportunities: LinkBuildingOpportunity[];
+  citationIssues: BrokenLinkCitationIssue[];
+  priorityActions: {
+    immediate: string[];
+    thisWeek: string[];
+    thisMonth: string[];
+  };
+}
+
+// Competitor Intelligence
+export interface TrackedCompetitor {
+  domain: string;
+  name: string;
+  overallScore: number;
+  keywordsTracked: number;
+  avgPosition: number;
+  totalTraffic: number;
+  recentChanges: number;
+  trend: "improving" | "stable" | "declining";
+}
+
+export interface CompetitorChange {
+  competitor: string;
+  changeType: string;
+  description: string;
+  url: string;
+  detectedDate: string;
+  impact: "high" | "medium" | "low";
+  relatedKeyword?: string;
+  rankingEffect?: string;
+  yourAction: string;
+}
+
+export interface KeywordBattle {
+  keyword: string;
+  monthlyVolume: number;
+  yourRank: number | null;
+  competitors: {
     domain: string;
-    domainRating: number;
-    backlinks: number;
+    rank: number;
+    change: number;
+    url: string;
+  }[];
+  leader: string;
+  gap: number;
+  opportunity: string;
+  difficulty: "easy" | "medium" | "hard";
+}
+
+export interface ContentComparison {
+  keyword: string;
+  yourUrl: string;
+  topCompetitorUrl: string;
+  metrics: {
+    metric: string;
+    yours: number;
+    theirs: number;
+    winner: "you" | "them" | "tie";
+    importance: "critical" | "high" | "medium" | "low";
+  }[];
+  structureAnalysis: {
+    element: string;
+    yourCount: number;
+    theirCount: number;
+    recommendation: string;
+  }[];
+  missingTopics: string[];
+  missingSchema: string[];
+}
+
+export interface ActionItem {
+  id: string;
+  priority: "critical" | "high" | "medium" | "low";
+  category: "content" | "schema" | "backlinks" | "technical" | "local" | "speed";
+  title: string;
+  description: string;
+  basedOn: string;
+  expectedImpact: string;
+  effort: "quick" | "moderate" | "significant";
+  deadline: string;
+  steps: string[];
+  completed: boolean;
+}
+
+export interface CompetitorIntelligenceResult {
+  scanDate: string;
+  yourDomain: string;
+  competitors: TrackedCompetitor[];
+  recentChanges: CompetitorChange[];
+  keywordBattles: KeywordBattle[];
+  contentComparisons: ContentComparison[];
+  backlinkIntelligence: any[]; 
+  actionItems: ActionItem[];
+  weeklyDigest: {
+    biggestThreats: string[];
+    quickWins: string[];
+    competitorWins: string[];
+    yourWins: string[];
+    trendingSummary: string;
+  };
+  correlationInsights: {
+    insight: string;
+    evidence: string;
+    recommendation: string;
+  }[];
+}
+
+// Content Structure Analyzer
+export interface PageContentAnalysis {
+  url: string;
+  rank: number;
+  title: string;
+  metaDescription: string;
+  wordCount: number;
+  readingTime: string;
+  headings: {
+    tag: string;
+    text: string;
+    wordCount: number;
+    position: number;
+    hasKeyword: boolean;
+  }[];
+  sections: {
+    heading: string;
+    headingTag: string;
+    wordCount: number;
+    hasImages: boolean;
+    hasVideo: boolean;
+    hasList: boolean;
+    hasTable: boolean;
+    hasSchema: boolean;
+    keyTopics: string[];
+  }[];
+  media: {
+    totalImages: number;
+    imagesWithAlt: number;
+    videos: number;
+    infographics: number;
+    tables: number;
+    lists: number;
+    codeBlocks: number;
+  };
+  schema: { type: string; present: boolean; completeness: string }[];
+  internalLinks: number;
+  externalLinks: number;
+  keywordDensity: number;
+  uniqueTopicsCovered: string[];
+  contentScore: number;
+  isYours?: boolean;
+}
+
+export interface ContentGap {
+  type: string;
+  severity: "critical" | "high" | "medium" | "low";
+  description: string;
+  competitorExample: string;
+  recommendation: string;
+  estimatedImpact: string;
+}
+
+export interface TopicCoverage {
+  topic: string;
+  yourCoverage: "full" | "partial" | "missing";
+  competitorsCovering: number;
+  importance: "essential" | "recommended" | "optional";
+  suggestedWordCount: number;
+}
+
+export interface ContentTemplate {
+  suggestedTitle: string;
+  suggestedMetaDescription: string;
+  recommendedWordCount: number;
+  outlineHeadings: {
+    tag: string;
+    text: string;
+    suggestedWordCount: number;
+    keyPoints: string[];
+  }[];
+  requiredMedia: string[];
+  requiredSchema: string[];
+  internalLinkTargets: string[];
+}
+
+export interface ContentStructureResult {
+  keyword: string;
+  analyzedAt: string;
+  yourPage: PageContentAnalysis | null;
+  competitors: PageContentAnalysis[];
+  gaps: ContentGap[];
+  topicCoverage: TopicCoverage[];
+  avgCompetitorWordCount: number;
+  avgCompetitorSections: number;
+  avgCompetitorImages: number;
+  contentTemplate: ContentTemplate;
+  quickWins: {
+    action: string;
+    effort: "low" | "medium" | "high";
+    impact: "low" | "medium" | "high";
+  }[];
+  summary: {
+    yourScore: number;
+    avgCompetitorScore: number;
+    biggestGap: string;
+    topPriority: string;
+  };
+}
+
+// Types needed for types.ts exports to fix errors
+export interface CompetitorLinkProfile {
+  domain: string;
+  totalBacklinks: number;
+  referringDomains: number;
+  avgDomainAuthority: number;
+  dofollowRatio: number;
+  topAnchors: { text: string; percentage: number; count: number }[];
+  linkVelocity: number;
+  newLinksLast30Days: number;
+  lostLinksLast30Days: number;
+  topLinkingDomains: any[];
+}
+
+export interface LinkGap {
+  domain: string;
+  domainAuthority: number;
+  linksToCompetitors: { competitor: string; count: number }[];
+  linksToYou: number;
+  opportunity: "high" | "medium" | "low";
+  suggestedApproach: string;
+  contactInfo: {
+    email: string | null;
+    contactPage: string | null;
+  };
+}
+
+export interface OutreachTarget {
+  priority: number;
+  domain: string;
+  domainAuthority: number;
+  contactEmail: string | null;
+  contactPage: string | null;
+  linkingToCompetitors: string[];
+  suggestedAngle: string;
+  outreachTemplate: string;
+  estimatedSuccessRate: number;
+  potentialValue: "high" | "medium" | "low";
+}
+
+export interface LinkBuildingStrategy {
+  strategyType: 'guest-post' | 'resource-page' | 'broken-link' | 'skyscraper' | 'digital-pr' | 'local-citation' | 'partnership';
+  description: string;
+  targets: string[];
+  estimatedEffort: 'low' | 'medium' | 'high';
+  estimatedImpact: 'low' | 'medium' | 'high';
+  timeframe: string;
+  steps: string[];
+}
+
+export interface AuthorityLinkResult {
+  analyzedAt: string;
+  yourDomain: string;
+  yourProfile: {
+    totalBacklinks: number;
+    referringDomains: number;
+    domainAuthority: number;
+    dofollowRatio: number;
+    avgLinkAuthority: number;
+    topAnchors: { text: string; count: number }[];
+  };
+  competitors: CompetitorLinkProfile[];
+  linkGaps: LinkGap[];
+  outreachTargets: OutreachTarget[];
+  strategies: LinkBuildingStrategy[];
+  quickStats: {
+    totalGapDomains: number;
+    highValueOpportunities: number;
+    avgCompetitorDA: number;
+    yourDAGap: number;
+    estimatedLinksNeeded: number;
+  };
+  summary: {
+    biggestOpportunity: string;
+    topPriority: string;
+    competitorAdvantage: string;
+    recommendedFocus: string;
+  };
+}
+
+// Link Attribute Auditor Types
+export interface LinkAttribute {
+  rel: string[];
+  isDofollow: boolean;
+  isNofollow: boolean;
+  isUGC: boolean;
+  isSponsored: boolean;
+}
+
+export interface AuditedBacklink {
+  sourceUrl: string;
+  sourceDomain: string;
+  targetUrl: string;
+  anchorText: string;
+  anchorType: 'exact-match' | 'partial-match' | 'branded' | 'naked-url' | 'generic' | 'image' | 'empty';
+  attributes: LinkAttribute;
+  placement: 'in-content' | 'sidebar' | 'footer' | 'header' | 'comment' | 'author-bio' | 'directory' | 'forum-signature';
+  contextSnippet: string;
+  domainAuthority: number;
+  pageAuthority: number;
+  spamScore: number;
+  topicalRelevance: 'high' | 'medium' | 'low' | 'none';
+  linkAge: string;
+  isLive: boolean;
+  trafficEstimate: number;
+  qualityScore: number;
+  issues: string[];
+  recommendation: 'keep' | 'monitor' | 'disavow' | 'fix';
+}
+
+export interface AnchorTextAnalysis {
+  distribution: {
+    type: string;
+    count: number;
+    percentage: number;
+    examples: string[];
+    status: 'healthy' | 'warning' | 'danger';
+  }[];
+  overOptimized: boolean;
+  brandedRatio: number;
+  exactMatchRatio: number;
+  recommendations: string[];
+}
+
+export interface LinkPlacementAnalysis {
+  distribution: {
+    placement: string;
+    count: number;
+    percentage: number;
+    avgQuality: number;
+  }[];
+  inContentRatio: number;
+  recommendations: string[];
+}
+
+export interface ToxicLinkReport {
+  totalToxicLinks: number;
+  toxicDomains: {
+    domain: string;
+    linkCount: number;
+    spamScore: number;
+    toxicSignals: string[];
+    recommendation: string;
+  }[];
+  disavowFileContent: string;
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+}
+
+export interface LinkVelocityData {
+  month: string;
+  newLinks: number;
+  lostLinks: number;
+  netGain: number;
+}
+
+export interface LinkHealthScore {
+  overall: number;
+  components: {
+    name: string;
+    score: number;
+    weight: number;
+    status: 'good' | 'warning' | 'critical';
+    description: string;
+  }[];
+}
+
+export interface LinkAttributeAuditResult {
+  auditedAt: string;
+  domain: string;
+  totalBacklinks: number;
+  totalReferringDomains: number;
+  backlinks: AuditedBacklink[];
+  anchorAnalysis: AnchorTextAnalysis;
+  placementAnalysis: LinkPlacementAnalysis;
+  toxicReport: ToxicLinkReport;
+  linkVelocity: LinkVelocityData[];
+  healthScore: LinkHealthScore;
+  attributeBreakdown: {
+    dofollow: number;
+    nofollow: number;
+    ugc: number;
+    sponsored: number;
+  };
+  domainAuthorityDistribution: {
+    range: string;
+    count: number;
+    percentage: number;
+  }[];
+  topIssues: {
+    issue: string;
+    severity: 'critical' | 'high' | 'medium' | 'low';
+    affectedLinks: number;
+    recommendation: string;
+  }[];
+  actionItems: {
+    priority: number;
+    action: string;
+    impact: string;
+    effort: 'low' | 'medium' | 'high';
+    linksAffected: number;
+  }[];
+  summary: {
+    healthStatus: 'healthy' | 'needs-attention' | 'at-risk' | 'critical';
+    biggestIssue: string;
+    topPriority: string;
+    quickWin: string;
+  };
+}
+
+// Automated SEO Health Monitor Types
+export interface SEOAlert {
+  id: string;
+  timestamp: string;
+  type: 'ranking_drop' | 'ranking_gain' | 'new_competitor' | 'lost_backlink' | 'new_backlink' | 'content_change' | 'technical_issue' | 'traffic_anomaly' | 'competitor_action' | 'opportunity';
+  severity: 'critical' | 'warning' | 'info' | 'success';
+  title: string;
+  description: string;
+  metric: string;
+  previousValue: string | number;
+  currentValue: string | number;
+  change: string;
+  affectedKeywords?: string[];
+  affectedPages?: string[];
+  recommendedAction: string;
+  actionUrl?: string;
+  isRead: boolean;
+  isActioned: boolean;
+}
+
+export interface RankingSnapshot {
+  keyword: string;
+  currentRank: number | null;
+  previousRank: number | null;
+  change: number;
+  trend: 'up' | 'down' | 'stable' | 'new' | 'lost';
+  url: string;
+  searchVolume: number;
+  competitors: {
+    domain: string;
+    rank: number;
+    change: number;
+  }[];
+}
+
+export interface TrafficMetrics {
+  period: string;
+  organicSessions: number;
+  previousPeriod: number;
+  change: number;
+  changePercent: number;
+  topPages: {
+    url: string;
+    sessions: number;
+    change: number;
+  }[];
+  topKeywords: {
+    keyword: string;
+    clicks: number;
+    impressions: number;
+    ctr: number;
+    position: number;
+  }[];
+}
+
+export interface BacklinkHealth {
+  totalBacklinks: number;
+  newLast7Days: number;
+  lostLast7Days: number;
+  toxicLinks: number;
+  avgDomainAuthority: number;
+  topNewLinks: {
+    domain: string;
+    da: number;
+    anchor: string;
+    date: string;
+  }[];
+  recentlyLost: {
+    domain: string;
+    da: number;
+    reason: string;
+    date: string;
+  }[];
+}
+
+export interface TechnicalHealth {
+  overallScore: number;
+  issues: {
+    category: string;
+    severity: 'critical' | 'warning' | 'info';
+    count: number;
+    description: string;
+  }[];
+  coreWebVitals: {
+    lcp: { value: number; status: 'good' | 'needs-improvement' | 'poor' };
+    fid: { value: number; status: 'good' | 'needs-improvement' | 'poor' };
+    cls: { value: number; status: 'good' | 'needs-improvement' | 'poor' };
+  };
+  indexationStatus: {
+    indexed: number;
+    notIndexed: number;
+    pending: number;
+  };
+  crawlErrors: number;
+}
+
+export interface CompetitorMovement {
+  domain: string;
+  changes: {
+    type: 'new_content' | 'ranking_change' | 'new_backlinks' | 'technical_update';
+    description: string;
+    impact: 'high' | 'medium' | 'low';
+    date: string;
+  }[];
+  threatLevel: 'high' | 'medium' | 'low';
+  keywordsGained: string[];
+  keywordsLost: string[];
+}
+
+export interface ActionChecklist {
+  id: string;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  category: 'technical' | 'content' | 'links' | 'local' | 'competitor-response';
+  title: string;
+  description: string;
+  estimatedImpact: string;
+  estimatedEffort: string;
+  dueDate: string;
+  relatedAlerts: string[];
+  steps: string[];
+  isCompleted: boolean;
+  completedDate?: string;
+}
+
+export interface WeeklyDigest {
+  weekOf: string;
+  overallHealthChange: number;
+  highlights: string[];
+  concerns: string[];
+  opportunities: string[];
+  rankingsSummary: {
+    improved: number;
+    declined: number;
+    stable: number;
+    newRankings: number;
+    lostRankings: number;
+  };
+  trafficSummary: {
+    totalSessions: number;
+    change: number;
+    topGrowthPage: string;
+    topDeclinePage: string;
+  };
+  backlinkSummary: {
+    gained: number;
+    lost: number;
+    netChange: number;
+  };
+  competitorSummary: string;
+  topActions: ActionChecklist[];
+}
+
+export interface SEOHealthMonitorResult {
+  monitoredAt: string;
+  domain: string;
+  overallHealthScore: number;
+  healthTrend: 'improving' | 'stable' | 'declining';
+  alerts: SEOAlert[];
+  rankings: RankingSnapshot[];
+  traffic: TrafficMetrics;
+  backlinks: BacklinkHealth;
+  technical: TechnicalHealth;
+  competitors: CompetitorMovement[];
+  actionChecklist: ActionChecklist[];
+  weeklyDigest: WeeklyDigest;
+  quickStats: {
+    rankingsUp: number;
+    rankingsDown: number;
+    newAlerts: number;
+    criticalIssues: number;
+    pendingActions: number;
+    competitorThreats: number;
+  };
 }

@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { ReviewAnalysis } from "../types";
+import { extractJSON } from "./utils";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -97,8 +98,7 @@ Return VALID JSON matching the following structure exactly. Do not use Markdown 
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
 
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    return JSON.parse(cleanText) as ReviewAnalysis;
+    return extractJSON(text) as ReviewAnalysis;
 
   } catch (error) {
     console.error("Review Analyzer Error:", error);

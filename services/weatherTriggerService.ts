@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { WeatherCheckResult, TriggerConfig } from "../types";
+import { extractJSON } from "./utils";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 const CONFIG_STORAGE_KEY = "seo_insight_weather_triggers";
@@ -135,8 +136,7 @@ Return valid JSON matching this structure exactly (no markdown formatting like \
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
 
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    const result = JSON.parse(cleanText) as WeatherCheckResult;
+    const result = extractJSON(text) as WeatherCheckResult;
     
     // Assign IDs if missing
     result.activeAlerts.forEach(alert => {

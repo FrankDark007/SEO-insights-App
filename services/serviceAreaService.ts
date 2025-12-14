@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { LocationPagePlan } from "../types";
+import { extractJSON } from "./utils";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -71,10 +72,7 @@ Return ONLY a valid JSON array of objects. Do not include markdown formatting li
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
 
-    // Clean any markdown if it slips through (though responseMimeType usually handles it)
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    
-    return JSON.parse(cleanText) as LocationPagePlan[];
+    return extractJSON(text) as LocationPagePlan[];
   } catch (error) {
     console.error("Service Area Plan Generation Error:", error);
     throw error;

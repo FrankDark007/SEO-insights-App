@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { BusinessNAP, CitationAuditResult } from "../types";
+import { extractJSON } from "./utils";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -136,8 +137,7 @@ Return valid JSON matching this structure exactly (no markdown formatting like \
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
 
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    return JSON.parse(cleanText) as CitationAuditResult;
+    return extractJSON(text) as CitationAuditResult;
 
   } catch (error) {
     console.error("Citation Audit Error:", error);

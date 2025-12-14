@@ -155,7 +155,7 @@ const CompetitorAlerts: React.FC = () => {
                       {(Object.keys(data.preferences) as Array<keyof StoredAlertData['preferences']>).map((key) => (
                           <label key={key} className="flex items-center justify-between cursor-pointer group">
                               <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
-                                  {key.replace('monitor', '').replace(/([A-Z])/g, ' $1').trim()}
+                                  {(key as string).replace('monitor', '').replace(/([A-Z])/g, ' $1').trim()}
                               </span>
                               <div className={`w-8 h-4 rounded-full relative transition-colors ${data.preferences[key] ? 'bg-indigo-600' : 'bg-gray-700'}`} onClick={() => togglePreference(key)}>
                                   <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all ${data.preferences[key] ? 'left-4.5' : 'left-0.5'}`}></div>

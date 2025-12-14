@@ -7,6 +7,7 @@ import {
   SchemaGenerationInput, 
   GeneratedSchema 
 } from "../types";
+import { extractJSON } from "./utils";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 const STORAGE_KEY = "seo_insight_rich_results";
@@ -200,8 +201,7 @@ Return valid JSON matching this structure exactly (no markdown formatting):
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
 
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    return JSON.parse(cleanText) as SerpAnalysisResult;
+    return extractJSON(text) as SerpAnalysisResult;
 
   } catch (error) {
     console.warn("API Error, falling back to mock data:", error);
@@ -241,8 +241,7 @@ Ensure strict JSON validity.
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
 
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    return JSON.parse(cleanText) as GeneratedSchema[];
+    return extractJSON(text) as GeneratedSchema[];
 
   } catch (error) {
     console.error("Schema Generation Error:", error);

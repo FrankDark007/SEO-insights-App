@@ -68,23 +68,94 @@ const AnalysisView: React.FC<AnalysisViewProps> = ({ state, analyzedUrl, keyword
     }
   };
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = async () => {
     const element = document.querySelector('.prose');
-    if (!element) {
-      alert('No report content to export');
-      return;
+    if (!element) return;
+    
+    // Store original styles
+    const originalStyle = element.getAttribute('style') || '';
+    const originalClass = element.getAttribute('class') || '';
+    
+    // Get all elements that need styling
+    const allElements = element.querySelectorAll('*');
+    const originalStyles: Map<Element, string> = new Map();
+    
+    // Store original inline styles
+    allElements.forEach(el => {
+      originalStyles.set(el, (el as HTMLElement).getAttribute('style') || '');
+    });
+
+    // Apply PDF styles directly
+    (element as HTMLElement).style.cssText = `
+      background: white !important;
+      color: #111827 !important;
+      padding: 20px !important;
+      font-size: 12pt !important;
+      line-height: 1.5 !important;
+    `;
+
+    // Style headings
+    element.querySelectorAll('h1').forEach(el => {
+      (el as HTMLElement).style.cssText = 'color: #1e40af !important; font-size: 20pt !important; font-weight: bold !important; border-bottom: 2px solid #2563eb !important; padding-bottom: 8px !important; margin-top: 20px !important;';
+    });
+    
+    element.querySelectorAll('h2').forEach(el => {
+      (el as HTMLElement).style.cssText = 'color: #1e40af !important; font-size: 16pt !important; font-weight: bold !important; margin-top: 16px !important;';
+    });
+    
+    element.querySelectorAll('h3').forEach(el => {
+      (el as HTMLElement).style.cssText = 'color: #374151 !important; font-size: 13pt !important; font-weight: bold !important; margin-top: 14px !important;';
+    });
+
+    // Style text
+    element.querySelectorAll('p, li, span').forEach(el => {
+      (el as HTMLElement).style.cssText = 'color: #111827 !important;';
+    });
+
+    element.querySelectorAll('strong, b').forEach(el => {
+      (el as HTMLElement).style.cssText = 'color: #111827 !important; font-weight: bold !important;';
+    });
+
+    // Style tables
+    element.querySelectorAll('table').forEach(el => {
+      (el as HTMLElement).style.cssText = 'width: 100% !important; border-collapse: collapse !important; margin: 12px 0 !important; font-size: 10pt !important;';
+    });
+
+    element.querySelectorAll('th').forEach(el => {
+      (el as HTMLElement).style.cssText = 'background: #1e40af !important; color: white !important; padding: 8px !important; border: 1px solid #1e3a8a !important; text-align: left !important;';
+    });
+
+    element.querySelectorAll('td').forEach(el => {
+      (el as HTMLElement).style.cssText = 'background: white !important; color: #111827 !important; padding: 8px !important; border: 1px solid #d1d5db !important;';
+    });
+
+    // Style links
+    element.querySelectorAll('a').forEach(el => {
+      (el as HTMLElement).style.cssText = 'color: #2563eb !important;';
+    });
+
+    try {
+      // @ts-ignore
+      await html2pdf().set({
+        margin: 10,
+        filename: `seo-report-${getSafeHostname()}-${new Date().toISOString().split('T')[0]}.pdf`,
+        image: { type: 'jpeg', quality: 0.95 },
+        html2canvas: { scale: 2, backgroundColor: '#ffffff' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(element).save();
+    } finally {
+      // Restore original styles
+      (element as HTMLElement).setAttribute('style', originalStyle);
+      (element as HTMLElement).setAttribute('class', originalClass);
+      allElements.forEach(el => {
+        const orig = originalStyles.get(el) || '';
+        if (orig) {
+          (el as HTMLElement).setAttribute('style', orig);
+        } else {
+          (el as HTMLElement).removeAttribute('style');
+        }
+      });
     }
-    
-    const opt = {
-      margin: 10,
-      filename: `seo-report-${getSafeHostname()}-${new Date().toISOString().split('T')[0]}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    
-    // @ts-ignore
-    html2pdf().set(opt).from(element).save();
   };
 
   const handleDownloadMd = () => {

@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { ContentBrief } from "../types";
+import { extractJSON } from "./utils";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -88,8 +89,7 @@ ${existingUrl ? `- Current Page to Improve: ${existingUrl}` : ''}
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
 
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    return JSON.parse(cleanText) as ContentBrief;
+    return extractJSON(text) as ContentBrief;
 
   } catch (error) {
     console.error("Content Brief Generation Error:", error);

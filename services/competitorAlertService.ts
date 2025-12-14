@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { AlertCheckResult, StoredAlertData, CompetitorSnapshot, Alert } from "../types";
+import { extractJSON } from "./utils";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 const STORAGE_KEY = "seo_insight_alert_data";
@@ -155,8 +156,7 @@ Return valid JSON matching this structure exactly (no markdown formatting like \
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
 
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    const result = JSON.parse(cleanText) as AlertCheckResult;
+    const result = extractJSON(text) as AlertCheckResult;
 
     // Ensure IDs are unique if AI generated duplicates or placeholders
     result.alerts.forEach((a) => {

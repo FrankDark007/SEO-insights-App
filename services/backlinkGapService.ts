@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { BacklinkGapResult } from "../types";
+import { extractJSON } from "./utils";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -117,8 +118,7 @@ Return valid JSON matching this structure exactly (no markdown formatting like \
     const text = response.text;
     if (!text) throw new Error("No data returned from AI");
 
-    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    return JSON.parse(cleanText) as BacklinkGapResult;
+    return extractJSON(text) as BacklinkGapResult;
 
   } catch (error) {
     console.error("Backlink Gap Error:", error);

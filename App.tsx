@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AppLayout from './components/layout/AppLayout';
 import { analyzeSeo } from './services/geminiService';
 import AnalysisView from './components/AnalysisView';
 import ServiceAreaBuilder from './components/ServiceAreaBuilder';
@@ -21,40 +22,26 @@ import LeadSourceTracker from './components/LeadSourceTracker';
 import RichResultAnalyzer from './components/RichResultAnalyzer';
 import GoogleIntegration from './components/GoogleIntegration';
 import AhrefsIntegration from './components/AhrefsIntegration';
+import KeywordOpportunityRadar from './components/KeywordOpportunityRadar';
+import BrokenLinkFinder from './components/BrokenLinkFinder';
+import CompetitorIntelligenceDashboard from './components/CompetitorIntelligenceDashboard';
+import ContentStructureAnalyzer from './components/ContentStructureAnalyzer';
+import AuthorityLinkDashboard from './components/AuthorityLinkDashboard';
+import LinkAttributeAuditor from './components/LinkAttributeAuditor';
+import SEOHealthMonitor from './components/SEOHealthMonitor';
 import { normalizeUrl } from './services/utils';
 import { AnalysisState, SeoFormData } from './types';
 import { 
   Search, 
-  Globe, 
   ArrowRight, 
   Loader2, 
-  BarChart2, 
+  Globe, 
   Zap, 
-  MapPin, 
-  Layers, 
-  FileText, 
-  Code,
-  TrendingUp,
-  Store,
-  MessageSquare,
-  Link2,
-  LayoutGrid,
-  Bell,
-  Network,
-  Compass,
-  CloudLightning,
-  ScanSearch,
-  LayoutDashboard,
-  PenTool,
-  Building2,
-  Users,
-  Sparkles,
-  Database,
-  BarChart3
+  MapPin 
 } from 'lucide-react';
 
 const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'analysis' | 'builder' | 'brief' | 'schema' | 'ranks' | 'gbp' | 'reviews' | 'backlinks' | 'matrix' | 'alerts' | 'internal' | 'local' | 'weather' | 'ads' | 'serp' | 'writer' | 'citations' | 'leads' | 'rich-results' | 'integration' | 'ahrefs'>('analysis');
+  const [activeTab, setActiveTab] = useState('monitor');
   const [formData, setFormData] = useState<SeoFormData>({
     url: '',
     keywords: '',
@@ -104,269 +91,19 @@ const App: React.FC = () => {
       setActiveTab('brief');
   };
 
-  return (
-    <div className="min-h-screen bg-[#0f1117] text-gray-100 flex flex-col">
-      {/* Header */}
-      <header className="border-b border-gray-800 bg-[#0f1117]/80 backdrop-blur-md sticky top-0 z-50 print:hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="bg-indigo-600 p-1.5 rounded-lg">
-                <BarChart2 className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-bold text-xl tracking-tight text-white hidden sm:block">SEO Insight<span className="text-indigo-500">Pro</span></span>
-            <span className="font-bold text-xl tracking-tight text-white sm:hidden">SIP</span>
-          </div>
-          
-          {/* Navigation Tabs */}
-          <div className="flex items-center gap-1 bg-gray-900/50 p-1 rounded-xl border border-gray-800 overflow-x-auto max-w-[70vw]">
-             <button
-                onClick={() => setActiveTab('analysis')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'analysis' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <Search className="w-4 h-4" />
-                Audit
-             </button>
-             <button
-                onClick={() => setActiveTab('integration')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'integration' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <Database className="w-4 h-4" />
-                Google
-             </button>
-             <button
-                onClick={() => setActiveTab('ahrefs')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'ahrefs' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <BarChart3 className="w-4 h-4" />
-                Ahrefs
-             </button>
-             <button
-                onClick={() => setActiveTab('leads')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'leads' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <Users className="w-4 h-4" />
-                Leads
-             </button>
-             <button
-                onClick={() => setActiveTab('writer')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'writer' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <PenTool className="w-4 h-4" />
-                Writer
-             </button>
-             <button
-                onClick={() => setActiveTab('citations')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'citations' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <Building2 className="w-4 h-4" />
-                Citations
-             </button>
-             <button
-                onClick={() => setActiveTab('rich-results')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'rich-results' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <Sparkles className="w-4 h-4" />
-                Rich Results
-             </button>
-             <button
-                onClick={() => setActiveTab('serp')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'serp' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <LayoutDashboard className="w-4 h-4" />
-                SERP
-             </button>
-             <button
-                onClick={() => setActiveTab('ads')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'ads' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <ScanSearch className="w-4 h-4" />
-                Ads Spy
-             </button>
-             <button
-                onClick={() => setActiveTab('weather')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'weather' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <CloudLightning className="w-4 h-4" />
-                Weather
-             </button>
-             <button
-                onClick={() => setActiveTab('local')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'local' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <Compass className="w-4 h-4" />
-                Local
-             </button>
-             <button
-                onClick={() => setActiveTab('internal')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'internal' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <Network className="w-4 h-4" />
-                Links
-             </button>
-             <button
-                onClick={() => setActiveTab('alerts')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'alerts' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <Bell className="w-4 h-4" />
-                Alerts
-             </button>
-             <button
-                onClick={() => setActiveTab('gbp')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'gbp' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <Store className="w-4 h-4" />
-                GBP
-             </button>
-             <button
-                onClick={() => setActiveTab('matrix')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'matrix' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <LayoutGrid className="w-4 h-4" />
-                Matrix
-             </button>
-             <button
-                onClick={() => setActiveTab('backlinks')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'backlinks' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <Link2 className="w-4 h-4" />
-                Links
-             </button>
-             <button
-                onClick={() => setActiveTab('reviews')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'reviews' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <MessageSquare className="w-4 h-4" />
-                Reviews
-             </button>
-             <button
-                onClick={() => setActiveTab('builder')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'builder' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <Layers className="w-4 h-4" />
-                Locations
-             </button>
-             <button
-                onClick={() => setActiveTab('ranks')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'ranks' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <TrendingUp className="w-4 h-4" />
-                Tracker
-             </button>
-             <button
-                onClick={() => setActiveTab('brief')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'brief' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <FileText className="w-4 h-4" />
-                Briefs
-             </button>
-             <button
-                onClick={() => setActiveTab('schema')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === 'schema' 
-                    ? 'bg-gray-800 text-white shadow-sm' 
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-             >
-                <Code className="w-4 h-4" />
-                Schema
-             </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        
-        {activeTab === 'analysis' && (
-          <>
-            {/* Hero Section */}
-            {!analysisState.data && !analysisState.isLoading && (
-                <div className="text-center mb-16 max-w-3xl mx-auto animate-fade-in print:hidden">
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'analysis':
+        return (
+          <div className="space-y-6">
+             {/* Hero Section - Only show when no data */}
+             {!analysisState.data && !analysisState.isLoading && (
+                <div className="text-center mb-10 max-w-3xl mx-auto animate-fade-in print:hidden">
                 <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-6">
-                    Real-Time <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">SEO Intelligence</span>
+                    AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Site Audit</span>
                 </h1>
                 <p className="text-base text-gray-400 mb-8 leading-relaxed max-w-2xl mx-auto">
-                    Analyze competitors, uncover keyword gaps, and get actionable optimization strategies powered by Gemini AI and live Google Search data.
+                    Instant comprehensive analysis of your site, competitors, and market opportunities using Google's Gemini 2.5 Flash model with live Search Grounding.
                 </p>
                 </div>
             )}
@@ -504,58 +241,43 @@ const App: React.FC = () => {
                   keywords={formData.keywords}
                 />
             </div>
-          </>
-        )}
-        
-        {activeTab === 'builder' && <ServiceAreaBuilder />}
-        
-        {activeTab === 'brief' && (
-            <ContentBriefGenerator /> 
-        )}
-        
-        {activeTab === 'schema' && <SchemaGenerator />}
+          </div>
+        );
+      case 'monitor': return <SEOHealthMonitor />;
+      case 'radar': return <KeywordOpportunityRadar />;
+      case 'intel': return <LocalKeywordIntel />;
+      case 'matrix': return <ContentGapMatrix />;
+      case 'competitor': return <CompetitorIntelligenceDashboard />;
+      case 'alerts': return <CompetitorAlerts />;
+      case 'serp': return <SerpFeatureTracker />;
+      case 'ads': return <GoogleAdsSpy />;
+      case 'writer': return <ContentWriter />;
+      case 'brief': return <ContentBriefGenerator />;
+      case 'structure': return <ContentStructureAnalyzer />;
+      case 'builder': return <ServiceAreaBuilder />;
+      case 'schema': return <SchemaGenerator />;
+      case 'rich-results': return <RichResultAnalyzer />;
+      case 'broken-links': return <BrokenLinkFinder />;
+      case 'internal': return <InternalLinkOptimizer />;
+      case 'backlinks': return <BacklinkGapFinder />;
+      case 'authority': return <AuthorityLinkDashboard />;
+      case 'linkaudit': return <LinkAttributeAuditor />;
+      case 'gbp': return <GBPAudit />;
+      case 'reviews': return <ReviewAnalyzer />;
+      case 'citations': return <CitationManager />;
+      case 'weather': return <WeatherTriggers />;
+      case 'ranks': return <RankTracker onOpenBrief={handleOpenBrief} />;
+      case 'leads': return <LeadSourceTracker />;
+      case 'integration': return <GoogleIntegration />;
+      case 'ahrefs': return <AhrefsIntegration />;
+      default: return <SEOHealthMonitor />;
+    }
+  };
 
-        {activeTab === 'ranks' && <RankTracker onOpenBrief={handleOpenBrief} />}
-
-        {activeTab === 'gbp' && <GBPAudit />}
-
-        {activeTab === 'reviews' && <ReviewAnalyzer />}
-
-        {activeTab === 'backlinks' && <BacklinkGapFinder />}
-
-        {activeTab === 'matrix' && <ContentGapMatrix />}
-
-        {activeTab === 'alerts' && <CompetitorAlerts />}
-
-        {activeTab === 'internal' && <InternalLinkOptimizer />}
-
-        {activeTab === 'local' && <LocalKeywordIntel />}
-
-        {activeTab === 'weather' && <WeatherTriggers />}
-
-        {activeTab === 'ads' && <GoogleAdsSpy />}
-
-        {activeTab === 'serp' && <SerpFeatureTracker />}
-
-        {activeTab === 'writer' && <ContentWriter />}
-
-        {activeTab === 'citations' && <CitationManager />}
-
-        {activeTab === 'leads' && <LeadSourceTracker />}
-
-        {activeTab === 'rich-results' && <RichResultAnalyzer />}
-
-        {activeTab === 'integration' && <GoogleIntegration />}
-
-        {activeTab === 'ahrefs' && <AhrefsIntegration />}
-      </main>
-
-       <footer className="border-t border-gray-800 mt-12 py-8 bg-[#0f1117] print:hidden">
-            <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
-                <p>&copy; {new Date().getFullYear()} SEO Insight Pro. Powered by Gemini & Google Search.</p>
-            </div>
-       </footer>
-    </div>
+  return (
+    <AppLayout activeTab={activeTab} onTabChange={setActiveTab}>
+      {renderContent()}
+    </AppLayout>
   );
 };
 
